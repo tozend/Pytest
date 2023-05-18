@@ -1,5 +1,8 @@
 import pytest
 
+from src.applications.api.github_api_client import GitHubAPIClient
+from src.config.config import Config
+
 
 @pytest.fixture(scope='module')
 def user_fixture():
@@ -15,3 +18,13 @@ def user_fixture():
     user = None
 
     print(f"User {user_name} removed")
+
+
+@pytest.fixture(scope='module')  # with function scope it will be LOGIN/LOGOUT in every method instead of LOGIN 3 methods LOGOUT
+def fixture_github_api_api_client():
+    api = GitHubAPIClient()
+    api.login(Config.get_property("USERNAME"), Config.get_property("PASSWORD"))
+
+    yield api
+
+    api.logout()
